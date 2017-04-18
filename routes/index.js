@@ -26,7 +26,11 @@ router.get('/', function(req, res) {
     fs.readdir(testFolder, (err, files) => {
         if (err) console.log(err);
         else {
-            fileList = files;
+            for(var i in files) {
+               if(path.extname(files[i]) === ".mp3") {
+                   fileList.push(files[i]);
+               }
+            }
         }
         console.log(fileList.length);
         fileList.forEach(function(i){
@@ -104,4 +108,45 @@ router.post('/', function(req, res){
         res.send([{'status':'OOPS'}]);
     }
 });
+
+router.post('/search', function(req, res){
+    var data = req.body;
+    // console.log(data);
+    // console.log('-----------');
+    var song = data.search_song.toLowerCase();
+    // console.log(song);
+    // console.log('-----------');
+    var search_query = song.split(' ');
+    // console.log(search_query);
+    // console.log('-----------'); 
+    store = []
+    function search(search_query, search_array, store, callback){
+        var doneCount = 0;
+        for(var j=0;j<search_array.length;j++){
+            console.log(search_array.length);
+            for(var k=0;k<search_query.length;k++){
+                //console.log(search_array[j].title+'-----'+search_query[k])
+                if(search_array[j].title.toLowerCase().includes(search_query[k])){
+                    console.log('found');
+                    store.push(search_array[j]);
+                    doneCount++;
+                    break;
+                }else{
+                    //console.log('Not found');
+                }
+            }
+        if(j==search_array.length-1){
+            console.log('yippee');
+            callback();
+        }
+        }
+    }
+
+    search(search_query, global.song_list, store, renderFunc);
+
+    function renderFunc(){
+        console.log(store.length);
+        res.send(store).status(200);
+    }
+})
 module.exports = router;

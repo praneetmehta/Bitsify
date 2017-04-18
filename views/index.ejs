@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="/css/materialize.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link href="/css/fonts.css" type="text/css" rel="stylesheet">
-
+	<script type="text/javascript" src="/js/ejs_production.js"></script>
 </head>
 <body>
 	<div id="background">
@@ -20,24 +20,16 @@
 	<div id="music_player">
 
 		<div id="nav_flex_container">
+		<form id="search_form">
+			<input type="text" name="search" id="search_song" placeholder="search songs" autocomplete="off">
+			<input type="submit" style="position: absolute; left: -9999px"/>
+
+
+		</form>
+		<div id="search_results"></div>
 		</div>
 		<div id="window">
-			<table>
-				<thead >
-						<th>Title</th>
-						<th>Album</th>
-						<th>Artist</th>
-				</thead>
-				<tbody>
-					<% for(var i=0;i<list.length;i++){%>
-					<tr id="<%i%>_row">
-						<td class="title"><span class="list_span" style="display: inline-block;"><%= list[i].title %><span></td>
-						<td><%= list[i].album %></td>
-						<td><%= list[i].artist %></td>
-					</tr>
-					<%}%>
-				</tbody>
-			</table>
+			<% include ./table %>
 		</div>
 		<div id="controls_flex_container">
 			<div id="song_info">
@@ -83,6 +75,20 @@
 <!-- 	<script src="/js/id3extractor.js" ></script>
  -->	<script>
 	$(document).ready(function(){
+		$("#search_form").submit(function(e) {
+		    return false;
+		});
+		// $('#search_song').change(function(){
+		// 	searchSong();
+		// })
+		$('#search_song').on('keyup', function() {
+		    var val1 = $('#search_song').val();
+		    setTimeout(function(){
+		    	if($('#search_song').val() == val1){
+		    		searchSong();
+		    	}
+		    },800);
+		});
 		$('#art_now_playing').attr('src',"data:image/jpeg;base64,<%= list[0].image%>");
 		var e =document.getElementById('art_now_playing');
 		var h = $('#controls_flex_container').height()-10;
@@ -207,39 +213,90 @@
 			        }
 			  });
 		}
-	});
-	var e =document.getElementById('art_now_playing');
-	e.addEventListener('click', function(){
-		console.log('clicked');
-		w = $('#nav_flex_container').width()-10;
-		h = $('#controls_flex_container').height()-10;
-		if(e.style.width == w+'px'){
-			e.style.transition = "all 0.5s";
-			e.style.width = h+'px';
-			e.style.height = h+'px';
-			e.style.bottom = '8px';
-			e.style.transform = 'rotateY(180deg)';
-			$('#art_holder').css({"width":"50px"});
-			setTimeout(function(){
-				e.style.transition = "all 0.01s";
-				e.style.transform = 'rotateY(0deg)';
-			},190);
-			$('#art_holder').css({"width":"50px"});
 
-		}else{
-			e.style.transition = "all 0.5s";
-			e.style.width = w+'px';
-			e.style.height = w+'px';
-			e.style.position = 'fixed';
-			e.style.bottom = '10%';
-			e.style.transform = 'rotateY(180deg)';
-			setTimeout(function(){
-				e.style.transition = "all 0.01s";
-				e.style.transform = 'rotateY(0deg)';
-			},190);
-			$('#art_holder').css({"width":"0px"});
+		var e =document.getElementById('art_now_playing');
+		e.addEventListener('click', function(){
+			console.log('clicked');
+			w = $('#nav_flex_container').width()-10;
+			h = $('#controls_flex_container').height()-10;
+			if(e.style.width == w+'px'){
+				e.style.transition = "all 0.5s";
+				e.style.width = h+'px';
+				e.style.height = h+'px';
+				e.style.bottom = '8px';
+				e.style.transform = 'rotateY(180deg)';
+				$('#art_holder').css({"width":"50px"});
+				setTimeout(function(){
+					e.style.transition = "all 0.01s";
+					e.style.transform = 'rotateY(0deg)';
+				},190);
+				$('#art_holder').css({"width":"50px"});
+
+			}else{
+				e.style.transition = "all 0.5s";
+				e.style.width = w+'px';
+				e.style.height = w+'px';
+				e.style.position = 'fixed';
+				e.style.bottom = '10%';
+				e.style.transform = 'rotateY(180deg)';
+				setTimeout(function(){
+					e.style.transition = "all 0.01s";
+					e.style.transform = 'rotateY(0deg)';
+				},190);
+				$('#art_holder').css({"width":"0px"});
+			}
+		});
+
+		function searchSong(){
+			var song = $('#search_song').val();
+			console.log(song);
+			$.ajax({
+				type: "POST",
+				url: '/search',
+				data: JSON.stringify({search_song: song}),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				success: function(data){
+					if(data.length == 0){
+						// console.log(typeof(data[1]));
+						renderSearchResult([{title:'Nothing Found'}], 'nothingFound')
+					}else{
+						// var html = new EJS({url: '/table.ejs'}).render(data)
+						// console.log(html);
+						renderSearchResult(data, 'search_result_list');
+					}
+				},
+				failure: function(errMsg) {
+				    alert(errMsg);
+				}
+
+			});
 		}
+
+		function renderSearchResult(data, classtoadd){
+			html = '<ul>';
+			for(var i=0;i<data.length;i++){
+				html += '<li style="font-size:12px;color:white;padding:5px 2px 5px 10px;background:rgba(255,255,255,.06);font-weight:100;" class="'+classtoadd+'">'+data[i].title+'</li><br>'
+			}
+			html+='</ul>';
+			$('#search_results').html(html);
+			attachListeners();
+		}
+
+		function attachListeners(){
+			[].forEach.call(document.getElementsByClassName('search_result_list'),function(ele){
+				ele.addEventListener('click', function(){
+					ele.style.cursor = 'pointer';
+					console.log(ele.innerHTML.split('<span>')[0]);
+					songChange(ele.innerHTML.split('<span>')[0]);
+				});
+			});
+		}
+
 	});
+
+
+
 	</script>
 	<style type="text/css">
 	    #warning-message { display: none; }
@@ -250,6 +307,8 @@
 	    @media only screen and (orientation:landscape){
 	        #warning-message { display:none; }
 	    }
+	    
+}
 	</style>
 </body>
 
