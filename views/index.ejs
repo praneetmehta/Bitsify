@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bitsify</title>
+	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="/js/materialize.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/materialize.min.css">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link href="/css/fonts.css" type="text/css" rel="stylesheet">
+
+</head>
+<body>
+	<div id="background">
+		<img id="bg_img" src="/images/bg.png">
+	</div>
+	<div id="warning-message" style="position: fixed;width: 100%;height: 100%;">
+		<h1 style="position: fixed;" id="warning_text">Plese rotate your device</h1><br>
+		<i  style="position: fixed" class="material-icons large" id="warning_icon">stay_primary_landscape</i>
+	</div>
+	<div id="music_player">
+
+		<div id="nav_flex_container">
+		</div>
+		<div id="window">
+			<table>
+				<thead >
+						<th>Title</th>
+						<th>Album</th>
+						<th>Artist</th>
+				</thead>
+				<tbody>
+					<% for(var i=0;i<list.length;i++){%>
+					<tr id="<%i%>_row">
+						<td class="title"><span class="list_span" style="display: inline-block;"><%= list[i].title %><span></td>
+						<td><%= list[i].album %></td>
+						<td><%= list[i].artist %></td>
+					</tr>
+					<%}%>
+				</tbody>
+			</table>
+		</div>
+		<div id="controls_flex_container">
+			<div id="song_info">
+				<div id="art_holder">
+					<img id="art_now_playing" src="/images/none.png" alt="x"> 
+				</div>
+				<div id="info_holder">
+					<h6 id="title_now_playing"><strong><%= list[0].title%></strong></h6>
+					<h6 id="album_now_playing"><%= list[0].album%></h6>
+				</div>
+			</div>
+			<div id="controls">
+				<div id="playback_buttons">
+					<audio preload="none" id="audio_player">
+						<source id="song_source" src="<%= list[0].path%>">
+					</audio>
+					<i class="small material-icons" id="replay" style="font-size: 22px;">replay_30</i>
+					<i class="small material-icons" id="previous" style="font-size: 22px;">skip_previous</i>
+					<i class="small material-icons" id="play">play_circle_outline</i>
+					<i class="small material-icons" id="next" style="font-size: 22px;">skip_next</i>
+					<i class="small material-icons" id="forward" style="font-size: 22px;">forward_30</i>
+				</div>
+				<div id="slider">
+					<h6 id="timeNow"><span>00</span>:<span>00</span></h6>
+					<div id='progress'>
+		      			<div id='progress-bar'></div>
+		    		</div>
+		    		<h6 id="length"><span>00</span>:<span>00</span></h6>	
+				</div>
+			</div>
+			<div id="other_controls">
+				
+			</div>
+		</div>
+		<div id="user_flex_container">
+			<h6 style="padding:15px">Praneet's Songs</h6>
+		</div>
+	</div>
+
+	<script src="/js/playerControls.js"></script>
+	<script src="/js/fileReader.js"></script>
+	<script src="/js/id3-minimized.js"></script>
+<!-- 	<script src="/js/id3extractor.js" ></script>
+ -->	<script>
+	$(document).ready(function(){
+		$('#art_now_playing').attr('src',"data:image/jpeg;base64,<%= list[0].image%>");
+		var e =document.getElementById('art_now_playing');
+		var h = $('#controls_flex_container').height()-10;
+		var w = $(window).width();
+		e.style.width = h+'px';
+		e.style.height = h+'px';
+		e.style.bottom = h*.08 + 'px';
+		$('#slider').css({
+			'marginBottom':h*.15+'px'
+		});
+		console.log(w*.05);
+		$('#title_now_playing').css({
+			'marginLeft':w*.02+'px'
+		});
+		$('#album_now_playing').css({
+			'margin-left':w*.02+'px'
+		});
+		$(window).resize(function () 
+		{
+		    var width = $(window).width();
+		    var height = $(window).height() - $("#controls_flex_container").height()-20;
+		    $('#window').css({
+		    	'width':width*.727 + 'px',
+		    	'height': height+'px',
+		    	'left': width*.14 + 'px'
+
+		    });
+		    setTimeout(function(){
+		    	var e =document.getElementById('art_now_playing');
+		    	var h = $('#controls_flex_container').height()-10;
+		    	var w = $(window).width();
+		    	e.style.width = h+'px';
+		    	e.style.height = h+'px';
+		    	e.style.bottom = h*.08 + 'px';
+		    	$('#slider').css({
+		    		'marginBottom':h*.15+'px'
+		    	});
+				var w1 = $('#warning_text').width();
+		        var w2 = $(window).width();
+		        var w3 = $('#warning_icon').width();
+				$('#warning_text').css({'position': 'fixed','top': ($(window).height())/2.5 +'px','left': (w2-w1)/2+'px'});
+				$('#warning_icon').css({'position': 'fixed','top': ($(window).height())/2.1 +'px','left': (w2-w3)/2+'px'});
+				console.log(w*.05);
+				$('#title_now_playing').css({
+					'margin-left':w*.02+'px'
+				});
+				$('#album_now_playing').css({
+					'margin-left':w*.02+'px'
+				});
+		    },500);
+		});
+		var w1 = $('#warning_text').width();
+        var w2 = $(window).width();
+        var w3 = $('#warning_icon').width();
+		$('#warning_text').css({'position': 'fixed','top': ($(window).height())/2.5 +'px','left': (w2-w1)/2+'px'});
+		$('#warning_icon').css({'position': 'fixed','top': ($(window).height())/2.1 +'px','left': (w2-w3)/2+'px'});
+		console.log(w1);
+		// $('#nav_flex_container').resizable({
+		//     handles: 'n,w,s,e',
+		//     minWidth: 200,
+		//     maxWidth: 300
+		// });
+		var width = $(window).width();
+		var height = $(window).height() - $("#controls_flex_container").height()-20;
+		$('#window').css({
+			'width':width*.727 + 'px',
+			'height': height+'px',
+			'left': width*.14 + 'px'
+		});
+		var obj = document.getElementsByClassName('list_span');
+		[].forEach.call(document.getElementsByClassName('list_span'),function(ele){
+			ele.addEventListener('click', function(){
+				console.log(ele.innerHTML.split('<span>')[0]);
+				songChange(ele.innerHTML.split('<span>')[0]);
+			});
+		})
+		function songChange(song){
+			$.ajax({
+			        type: "POST",
+			        url: "/",
+			        data: JSON.stringify({song:song}),
+			        contentType: "application/json; charset=utf-8",
+			        dataType: "json",
+			        success: function(data){
+			        	if(data[0].status == 'OK'){
+			        		// console.log(typeof(data[1]));
+			        		 console.log(data[1]);
+			        		$('#title_now_playing').html(data[1].title);
+			        		$('#album_now_playing').html(data[1].album.split('(')[0].slice(0,28));
+			        		$('#art_now_playing').attr('src',"data:image/jpeg;base64," + data[1].image);
+			        		$('#song_source').attr('src', data[1].path);
+			        		document.getElementById("audio_player").load();
+			        		$('audio')[0].play();
+			        		$('#play').html('pause_circle_outline');
+			        	}else{
+			        		alert('failed');
+			        	}
+			        },
+			        failure: function(errMsg) {
+			            alert(errMsg);
+			        }
+			  });
+		}
+		function refresh(){
+			$.ajax({
+			        type: "POST",
+			        url: "/refresh",
+			        data: JSON.stringify({task:refresh}),
+			        contentType: "application/json; charset=utf-8",
+			        dataType: "json",
+			        success: function(data){
+			        	if(data[0].status == 'OK'){
+			        		// console.log(typeof(data[1]));
+			        		console.log(data[1]);
+			        		
+			        	}else{
+			        		alert('failed');
+			        	}
+			        },
+			        failure: function(errMsg) {
+			            alert(errMsg);
+			        }
+			  });
+		}
+	});
+	var e =document.getElementById('art_now_playing');
+	e.addEventListener('click', function(){
+		console.log('clicked');
+		w = $('#nav_flex_container').width()-10;
+		h = $('#controls_flex_container').height()-10;
+		if(e.style.width == w+'px'){
+			e.style.transition = "all 0.5s";
+			e.style.width = h+'px';
+			e.style.height = h+'px';
+			e.style.bottom = '8px';
+			e.style.transform = 'rotateY(180deg)';
+			$('#art_holder').css({"width":"50px"});
+			setTimeout(function(){
+				e.style.transition = "all 0.01s";
+				e.style.transform = 'rotateY(0deg)';
+			},190);
+			$('#art_holder').css({"width":"50px"});
+
+		}else{
+			e.style.transition = "all 0.5s";
+			e.style.width = w+'px';
+			e.style.height = w+'px';
+			e.style.position = 'fixed';
+			e.style.bottom = '10%';
+			e.style.transform = 'rotateY(180deg)';
+			setTimeout(function(){
+				e.style.transition = "all 0.01s";
+				e.style.transform = 'rotateY(0deg)';
+			},190);
+			$('#art_holder').css({"width":"0px"});
+		}
+	});
+	</script>
+	<style type="text/css">
+	    #warning-message { display: none; }
+	    @media only screen and (orientation:portrait){
+	        #music_player { display:none; }
+	        #warning-message { display:block; }
+	    }
+	    @media only screen and (orientation:landscape){
+	        #warning-message { display:none; }
+	    }
+	</style>
+</body>
+
+</html>
+
