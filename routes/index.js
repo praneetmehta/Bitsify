@@ -126,7 +126,7 @@ router.post('/search', function(req, res){
             console.log(search_array.length);
             for(var k=0;k<search_query.length;k++){
                 //console.log(search_array[j].title+'-----'+search_query[k])
-                if(search_array[j].title.toLowerCase().includes(search_query[k])){
+                if(search_array[j].title.toLowerCase().includes(search_query[k]) || search_array[j].artist.toLowerCase().includes(search_query[k]) || search_array[j].album.toLowerCase().includes(search_query[k])){
                     console.log('found');
                     store.push(search_array[j]);
                     doneCount++;

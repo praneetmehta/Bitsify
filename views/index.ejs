@@ -75,8 +75,59 @@
 <!-- 	<script src="/js/id3extractor.js" ></script>
  -->	<script>
 	$(document).ready(function(){
+		window.nextSong = '';
+		window.prevSong = '';
 		$("#search_form").submit(function(e) {
 		    return false;
+		});
+		$('#next').click(function(){
+			var player = $('audio')[0];
+
+			var ele = window.nextSong;
+			console.log(ele)
+			selfClick = true;
+			player.pause();
+			var waitTime = 150;
+
+			var nextSongtoPlay = ele.find('td').first().find('span');
+			console.log(nextSongtoPlay.html());
+			setTimeout(function () {      
+			  // Resume play if the element if is paused
+			    nextSongtoPlay.click();
+			    console.log('ck');
+			  
+			}, waitTime);
+			
+		});
+		$('#previous').click(function(){
+			var player = $('audio')[0];
+
+			var ele = window.prevSong;
+			selfClick = true;
+			player.pause();
+			var waitTime = 150
+			var nextSongtoPlay = ele.find('td').first().find('span');
+			setTimeout(function () {      
+			  // Resume play if the element if is paused
+			    nextSongtoPlay.click();
+			    console.log('ck');
+			  
+			}, waitTime);
+			
+		});
+		var player = $('audio')[0];
+		$(player).on('ended', function(){
+			var ele = window.nextSong;
+			selfClick = true;
+			player.pause();
+			var waitTime = 150
+			var nextSongtoPlay = ele.find('td').first().find('span');
+			setTimeout(function () {      
+			  // Resume play if the element if is paused
+			    nextSongtoPlay.click();
+			    console.log('ck');
+			  
+			}, waitTime);
 		});
 		// $('#search_song').change(function(){
 		// 	searchSong();
@@ -84,10 +135,13 @@
 		$('#search_song').on('keyup', function() {
 		    var val1 = $('#search_song').val();
 		    setTimeout(function(){
-		    	if($('#search_song').val() == val1){
+		    	if($('#search_song').val() == val1 && $('#search_song').val() != ''){
 		    		searchSong();
+		    	}else if(val1 == ''){
+		    		renderSearchResult([], 'nothingFound')
 		    	}
 		    },800);
+
 		});
 		$('#art_now_playing').attr('src',"data:image/jpeg;base64,<%= list[0].image%>");
 		var e =document.getElementById('art_now_playing');
@@ -161,10 +215,15 @@
 		var obj = document.getElementsByClassName('list_span');
 		[].forEach.call(document.getElementsByClassName('list_span'),function(ele){
 			ele.addEventListener('click', function(){
-				console.log(ele.innerHTML.split('<span>')[0]);
+				elej = $(ele);
+				window.nextSong = $(ele).closest('tr').next('tr');
+				window.prevSong = $(ele).closest('tr').prev('tr');
+				//nextSong($(ele).closest('tr').next('tr'));
+				//previousSong($(ele).closest('tr').prev('tr'))
+				// console.log(ele.parentNode.parentNode.rows);
 				songChange(ele.innerHTML.split('<span>')[0]);
 			});
-		})
+		});
 		function songChange(song){
 			$.ajax({
 			        type: "POST",
@@ -181,8 +240,10 @@
 			        		$('#art_now_playing').attr('src',"data:image/jpeg;base64," + data[1].image);
 			        		$('#song_source').attr('src', data[1].path);
 			        		document.getElementById("audio_player").load();
-			        		$('audio')[0].play();
-			        		$('#play').html('pause_circle_outline');
+			        		setTimeout(function(){
+			        			$('audio')[0].play();
+			        			$('#play').html('pause_circle_outline');
+			        		},300);
 			        	}else{
 			        		alert('failed');
 			        	}
@@ -259,7 +320,7 @@
 				success: function(data){
 					if(data.length == 0){
 						// console.log(typeof(data[1]));
-						renderSearchResult([{title:'Nothing Found'}], 'nothingFound')
+						renderSearchResult([{title:'Nothing Found', artist:''}], 'nothingFound');
 					}else{
 						// var html = new EJS({url: '/table.ejs'}).render(data)
 						// console.log(html);
@@ -276,7 +337,7 @@
 		function renderSearchResult(data, classtoadd){
 			html = '<ul>';
 			for(var i=0;i<data.length;i++){
-				html += '<li style="font-size:12px;color:white;padding:5px 2px 5px 10px;background:rgba(255,255,255,.06);font-weight:100;" class="'+classtoadd+'">'+data[i].title+'</li><br>'
+				html += '<li style="font-size:12px;color:white;padding:5px 2px 5px 10px;background:rgba(255,255,255,.06);font-weight:100;" class="'+classtoadd+'"><strong>'+data[i].title+'</strong><br><span style="font-size:10px">'+data[i].artist+'</span><br><span style="font-size:10px">'+data[i].album+'</span></li><br>'
 			}
 			html+='</ul>';
 			$('#search_results').html(html);
@@ -287,12 +348,65 @@
 			[].forEach.call(document.getElementsByClassName('search_result_list'),function(ele){
 				ele.addEventListener('click', function(){
 					ele.style.cursor = 'pointer';
-					console.log(ele.innerHTML.split('<span>')[0]);
-					songChange(ele.innerHTML.split('<span>')[0]);
+					console.log(ele.innerHTML.split('>')[1].split('<')[0]);
+					songChange(ele.innerHTML.split('>')[1].split('<')[0]);
 				});
 			});
 		}
 
+		// function nextSong(ele){
+		// 	var player = $('audio')[0];
+		// 	var selfClick = false;
+		// 	$(player).on('ended', function(){ 
+		// 	    player.pause();
+		// 	    var waitTime = 150
+		// 	    player.currentTime = 0;
+		// 	    var nextSongtoPlay = ele.find('td').first().find('span');
+		// 	    setTimeout(function () {      
+		// 	      // Resume play if the element if is paused
+		// 	        if(!selfClick){
+		// 	        	console.log('clicked');
+		// 	        	nextSongtoPlay.click();
+		// 	        }
+			      
+		// 	    }, waitTime);
+			    
+		// 	});
+		// 	// $('#next').click(function(){
+		// 	// 	selfClick = true;
+		// 	// 	player.pause();
+		// 	// 	var waitTime = 150
+		// 	// 	player.currentTime = 0;
+		// 	// 	var nextSongtoPlay = ele.find('td').first().find('span');
+		// 	// 	setTimeout(function () {      
+		// 	// 	  // Resume play if the element if is paused
+		// 	// 	    nextSongtoPlay.click();
+		// 	// 	    console.log('ck');
+				  
+		// 	// 	}, waitTime);
+				
+		// 	// });
+
+		// }
+		// function previousSong(ele){
+		// 	var player = $('audio')[0]
+
+		// 	$('#previous').click(function(){
+		// 		player.pause();
+		// 		var waitTime = 150
+		// 		player.currentTime = 0;
+		// 		var preSongToPlay = ele.find('td').first().find('span');
+		// 		setTimeout(function () {      
+		// 		  // Resume play if the element if is paused
+		// 			if(preSongToPlay){
+		// 				preSongToPlay.click();
+		// 			}else{
+		// 				console.log('last song');
+		// 			}				  
+		// 		}, waitTime);
+				
+		// 	});
+		// }
 	});
 
 
@@ -307,8 +421,9 @@
 	    @media only screen and (orientation:landscape){
 	        #warning-message { display:none; }
 	    }
-	    
-}
+	    .search_result_list:hover{
+	    	cursor: pointer;
+	    }
 	</style>
 </body>
 

@@ -6,7 +6,7 @@
 	</thead>
 	<tbody>
 		<% for(var i=0;i<list.length;i++){%>
-		<tr id="<%i%>_row">
+		<tr class="_row">
 			<td class="title"><span class="list_span" style="display: inline-block;"><%= list[i].title %><span></td>
 			<td class="albumhere"><%= list[i].album.slice(0,40).split('(')[0] %></td>
 			<td><%= list[i].artist %></td>

@@ -20,18 +20,13 @@ $(document).ready(function(){
 				$(this).html('play_circle_outline');
 			}
 		});
-		$('#next').click(function(){
-			player.pause();
-			
-		});
-		$('#previous').click(function(){
-			player.pause();
-		});
+	
 		//Event listener when track is playing
 		$(player).on('timeupdate' ,function()   {   
 		    $('#progress-bar').css('width', ( (player.currentTime/player.duration) *100)+"%");
 			timeNow.html('<span>'+('0'+Math.floor(player.currentTime/60)).slice(-2)+'</span>:<span>'+('0'+Math.floor(player.currentTime%60)).slice(-2)+'</span>');
-			length.html('<span>'+('0'+Math.floor(player.duration/60)).slice(-2)+'</span>:<span>'+('0'+Math.floor(player.duration/60*10)).slice(-2)+'</span>');
+			length.html('<span>'+('0'+Math.floor(player.duration/60)).slice(-2)+'</span>:<span>'+('0'+Math.floor(player.duration%60)).slice(-2)+'</span>');
+			console.log(player.duration);
 		});
 		
 		//Event listener when the track finishes  
