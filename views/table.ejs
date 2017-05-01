@@ -3,13 +3,15 @@
 			<th>Title</th>
 			<th class="albumhere">Album</th>
 			<th>Artist</th>
+			<th></th>
 	</thead>
-	<tbody>
+	<tbody class="song_row">
 		<% for(var i=0;i<list.length;i++){%>
-		<tr id="<%i%>_row">
+		<tr id="<%=i%>_row" >
 			<td class="title"><span class="list_span" style="display: inline-block;"><%= list[i].title %><span></td>
 			<td class="albumhere"><%= list[i].album.slice(0,40).split('(')[0] %></td>
 			<td><%= list[i].artist %></td>
+			<td><i class="material-icons small add_to_now_playing" style="font-size:15px">playlist_add</i></td>
 		</tr>
 		<%}%>
 	</tbody>

@@ -2,94 +2,204 @@
 <html>
 <head>
 	<title>Bitsify</title>
+	<link rel="icon" href="/images/bitsify.png" sizes="16x16">
 	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="/css/materialize.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link href="/css/fonts.css" type="text/css" rel="stylesheet">
 	<script type="text/javascript" src="/js/ejs_production.js"></script>
+	<link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+	   rel = "stylesheet">
+	   <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	   <script type="text/javascript" src="/js/touchPunch.min.js"></script>
+
 </head>
 <body>
-	<div id="background">
-		<img id="bg_img" src="/images/bg.png">
+	<div id="preload" style="position: fixed;">
+		<img src="/images/bitsify.png" style="width: 200px;height: 200px">
+		<h2 style="text-align: center">Bitsify</h2>
 	</div>
-	<div id="warning-message" style="position: fixed;width: 100%;height: 100%;">
-		<h1 style="position: fixed;" id="warning_text">Plese rotate your device</h1><br>
-		<i  style="position: fixed" class="material-icons large" id="warning_icon">stay_primary_landscape</i>
-	</div>
-	<div id="music_player">
-
-		<div id="nav_flex_container">
-		<form id="search_form">
-			<input type="text" name="search" id="search_song" placeholder="search songs" autocomplete="off">
-			<input type="submit" style="position: absolute; left: -9999px"/>
-
-
-		</form>
-		<div id="search_results"></div>
+	<div id="main">
+		<div id="controls_flex_container_bg">
+			
 		</div>
-		<div id="window">
-			<% include ./table %>
+		<div id="modal1" class="modal">
+		  <div class="modal-content" style="color: black;">
+		    <h4>Instructions</h4>
+		    <p>Click on the song's title to play the song</p><br>
+		    <p><strong>Search : </strong>To search just enter a keyword (from title or artist name) and search results will appear automatically</p><br>
+		    <p><strong>Buttons : </strong></p>
+		    <ul>
+		    	<li><i class="small material-icons" style="font-size:22px;margin-top: 20px">launch</i> opens the youtube video for the currently playing song in a floating player(iframe). This player is not draggable by default</li>
+		    	<li><i class="small material-icons" style="font-size:22px;margin-top: 20px">visibility_off</i> can be used to hide/show the youtube popup player</li>
+		    	<li><i class="small material-icons" style="font-size:22px;margin-top: 20px">lock_outline</i> is used to toggle the draggable functionality of the player. Once enabled and youtube controls will not work. They will work on disabling it again.</li>
+		    </ul><br>
+		    <p>You can add songs to your now playing list from the music list or from search list, but to play from the now playing playlist you need to play any one song from that list (prefferably the top one because that's where you want your playlist to start from). You can not remove individual songs from the playlist right now :( By the way the playlist is sortable.</p>
+		  </div>
+		  <div class="modal-footer">
+		    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+		  </div>
 		</div>
-		<div id="controls_flex_container">
-			<div id="song_info">
-				<div id="art_holder">
-					<img id="art_now_playing" src="/images/none.png" alt="x"> 
+		<div id="background">
+			<img id="bg_img" src="/images/bg.png">
+		</div>
+		<div id="warning-message" style="position: fixed;width: 100%;height: 100%;">
+			<h1 style="position: fixed;" id="warning_text">Plese rotate your device</h1><br>
+			<i  style="position: fixed" class="material-icons large" id="warning_icon">stay_primary_landscape</i>
+		</div>
+		<div id="music_player">
+
+			<div id="nav_flex_container">
+			<form id="search_form">
+				<input type="text" name="search" id="search_song" placeholder="Enter Keyword" autocomplete="off">
+				<input type="submit" style="position: absolute; left: -9999px"/>
+
+
+			</form>
+			<div id="search_results"></div>
+			</div>
+			<div id="window">
+				<% include ./table %>
+			</div>
+
+			<div id="controls_flex_container">
+				<div id="song_info">
+					<div id="art_holder">
+						<img id="art_now_playing" src="/images/none.png" alt="x"> 
+					</div>
+					<div id="info_holder">
+						<h6 id="title_now_playing"><strong><%= list[0].title%></strong></h6>
+						<h6 id="album_now_playing"><%= list[0].album%></h6>
+					</div>
 				</div>
-				<div id="info_holder">
-					<h6 id="title_now_playing"><strong><%= list[0].title%></strong></h6>
-					<h6 id="album_now_playing"><%= list[0].album%></h6>
+				<div id="controls">
+					<div id="playback_buttons">
+						<audio preload="none" id="audio_player">
+							<source id="song_source" src="<%= list[0].path%>">
+						</audio>
+						<i class="small material-icons" id="replay" style="font-size: 22px;">replay_30</i>
+						<i class="small material-icons" id="previous" style="font-size: 22px;">skip_previous</i>
+						<i class="small material-icons" id="play">play_circle_outline</i>
+						<i class="small material-icons" id="next" style="font-size: 22px;">skip_next</i>
+						<i class="small material-icons" id="forward" style="font-size: 22px;">forward_30</i>
+					</div>
+					<div id="slider">
+						<h6 id="timeNow"><span>00</span>:<span>00</span></h6>
+						<div id='progress'>
+			      			<div id='progress-bar'></div>
+			    		</div>
+			    		<h6 id="length"><span>00</span>:<span>00</span></h6>	
+					</div>
+				</div>
+				<div id="other_controls">
+					<i class="small material-icons" id="youtube" style="font-size:22px;margin-top: 20px">launch</i>
+					<i class="small material-icons" id="youtube_status" style="font-size:22px;margin-top: 20px">visibility_off</i>
+					<i class="small material-icons" id="click_status" style="font-size:22px;margin-top: 20px">lock_outline</i>
+					<i class="small material-icons" id="help" style="font-size:22px;margin-top: 20px" onclick="$('#modal1').modal('open')">info</i>
+
+
+
 				</div>
 			</div>
-			<div id="controls">
-				<div id="playback_buttons">
-					<audio preload="none" id="audio_player">
-						<source id="song_source" src="<%= list[0].path%>">
-					</audio>
-					<i class="small material-icons" id="replay" style="font-size: 22px;">replay_30</i>
-					<i class="small material-icons" id="previous" style="font-size: 22px;">skip_previous</i>
-					<i class="small material-icons" id="play">play_circle_outline</i>
-					<i class="small material-icons" id="next" style="font-size: 22px;">skip_next</i>
-					<i class="small material-icons" id="forward" style="font-size: 22px;">forward_30</i>
-				</div>
-				<div id="slider">
-					<h6 id="timeNow"><span>00</span>:<span>00</span></h6>
-					<div id='progress'>
-		      			<div id='progress-bar'></div>
-		    		</div>
-		    		<h6 id="length"><span>00</span>:<span>00</span></h6>	
-				</div>
-			</div>
-			<div id="other_controls">
+			<div id="user_flex_container">
+				<form id="youtube_search_form">
+					<input type="text" name="search" id="youtube_search" placeholder="Search Youtube" autocomplete="off">
+					<input type="button" id="youtube_button" value="search" style="border: 1px solid white; color: white; font-family: Roboto; font-size: 13px; text-align: center ;border-radius:20px;padding: 4px 7px" class="black" />
+				</form>
+				<br>
 				
+				<h6 style="font-weight:800 ">Now Playing<span><i class="material-icons small" id="remove_now_playing" style="font-size: 15px">loop</i></span></h6>
+				
+				<table id="now_playing_list">
+					<tbody id="now_playing_list_body" style="overflow-y: scroll">
+						
+					</tbody>
+				</table>
 			</div>
 		</div>
-		<div id="user_flex_container">
-			<h6 style="padding:15px">Praneet's Songs</h6>
+		<div id="youtube_holder" style="position: absolute;bottom: 100px;right: 100px; width: 17vmax; height: 11vmax;">
+		<div id="iframeFix" style="display:block; background:transparent; position:absolute; width:17vmax; height:11vmax; z-index:9999999;"></div>
+
+			<iframe id="youtube_player" style="width: 17vmax;height: 11vmax;" 
+			src="" allowfulscreen>
+			</iframe>
 		</div>
 	</div>
-
 	<script src="/js/playerControls.js"></script>
 	<script src="/js/fileReader.js"></script>
 	<script src="/js/id3-minimized.js"></script>
 <!-- 	<script src="/js/id3extractor.js" ></script>
  -->	<script>
+ $('#preload').fadeIn(2000);
 	$(document).ready(function(){
+		setTimeout(function(){
+			$('#preload').fadeOut(1500);
+			$('#main').fadeIn(1500);
+			resizeFunction();	
+		},2000);
+		$('#now_playing_list_body').sortable();
+		$('#remove_now_playing').click(function(){
+			$('#now_playing_list_body').html('');
+		});
+		$('.modal').modal();
+		$('#youtube_holder').draggable();
+		$('#iframeFix').css('display','none');
+		var currentsong = '';
 		window.nextSong = '';
 		window.prevSong = '';
+		$('#click_status').click(function(){
+			if($('#iframeFix').css('display') == 'none'){
+				$('#iframeFix').css('display','block');
+				$('#click_status').html('lock_open');
+				console.log($('#iframeFix').css('display'));
+			}else{
+				$('#iframeFix').css('display','none');
+				console.log($('#iframeFix').css('display'));
+				$('#click_status').html('lock_outline');
+			}
+		});
+		addToPlaylistEventListeners();
+		$('#youtube').click(function(){
+			youtubeFeed($('#title_now_playing').text() +' '+ currentsong.artist + ' video song');
+		});
 		$("#search_form").submit(function(e) {
 		    return false;
+		});
+		$("#youtube_search_form").submit(function(e) {
+		    return false;
+		});
+		$('#youtube_button').click(function(){
+			youtubeFeed($('#youtube_search').val());
+			$('#youtube_search').val('');
+		});
+		$('#youtube_status').click(function(){
+			if($('#youtube_status').html() == 'visibility'){
+				$('#youtube_player').attr('src',$('#youtube_player').attr('src'));
+				$('#youtube_holder').css('display','none');
+				$('#youtube_status').html('visibility_off')
+				setTimeout(function(){
+					var player = $('audio')[0];
+					player.pause();
+				},600);
+			}else{
+				var player = $('audio')[0];
+				player.pause();
+				$('#youtube_holder').css('display','block');
+				$('#youtube_status').html('visibility');
+			}
 		});
 		$('#next').click(function(){
 			var player = $('audio')[0];
 
 			var ele = window.nextSong;
-			console.log(ele)
+			console.log(ele);
 			selfClick = true;
 			player.pause();
 			var waitTime = 150;
 
-			var nextSongtoPlay = ele.find('td').first().find('span');
+			var nextSongtoPlay = $('#now_playing_list tr').length != 0 ? ele.find('td').first() : ele.find('td').first().find('span');
 			console.log(nextSongtoPlay.html());
 			setTimeout(function () {      
 			  // Resume play if the element if is paused
@@ -121,7 +231,7 @@
 			selfClick = true;
 			player.pause();
 			var waitTime = 150
-			var nextSongtoPlay = ele.find('td').first().find('span');
+			var nextSongtoPlay = ele.find('td').first();
 			setTimeout(function () {      
 			  // Resume play if the element if is paused
 			    nextSongtoPlay.click();
@@ -166,33 +276,11 @@
 		    var height = $(window).height() - $("#controls_flex_container").height()-20;
 		    $('#window').css({
 		    	'width':width*.727 + 'px',
-		    	'height': height+'px',
+		    	'height': height+10+'px',
 		    	'left': width*.14 + 'px'
 
 		    });
-		    setTimeout(function(){
-		    	var e =document.getElementById('art_now_playing');
-		    	var h = $('#controls_flex_container').height()-10;
-		    	var w = $(window).width();
-		    	e.style.width = h+'px';
-		    	e.style.height = h+'px';
-		    	e.style.bottom = h*.08 + 'px';
-		    	$('#slider').css({
-		    		'marginBottom':h*.15+'px'
-		    	});
-				var w1 = $('#warning_text').width();
-		        var w2 = $(window).width();
-		        var w3 = $('#warning_icon').width();
-				$('#warning_text').css({'position': 'fixed','top': ($(window).height())/2.5 +'px','left': (w2-w1)/2+'px'});
-				$('#warning_icon').css({'position': 'fixed','top': ($(window).height())/2.1 +'px','left': (w2-w3)/2+'px'});
-				console.log(w*.05);
-				$('#title_now_playing').css({
-					'margin-left':w*.02+'px'
-				});
-				$('#album_now_playing').css({
-					'margin-left':w*.02+'px'
-				});
-		    },500);
+		    setTimeout(resizeFunction(),500);
 		});
 		var w1 = $('#warning_text').width();
         var w2 = $(window).width();
@@ -209,22 +297,37 @@
 		var height = $(window).height() - $("#controls_flex_container").height()-20;
 		$('#window').css({
 			'width':width*.727 + 'px',
-			'height': height+'px',
+			'height': height-55+'px',
 			'left': width*.14 + 'px'
 		});
-		var obj = document.getElementsByClassName('list_span');
-		[].forEach.call(document.getElementsByClassName('list_span'),function(ele){
+		var obj = document.getElementsByClassName('title');
+		[].forEach.call(document.getElementsByClassName('title'),function(ele){
 			ele.addEventListener('click', function(){
 				elej = $(ele);
-				window.nextSong = $(ele).closest('tr').next('tr');
-				window.prevSong = $(ele).closest('tr').prev('tr');
+				window.nextSong = elej.closest('tr').next('tr');
+				window.prevSong = elej.closest('tr').prev('tr');
 				//nextSong($(ele).closest('tr').next('tr'));
 				//previousSong($(ele).closest('tr').prev('tr'))
 				// console.log(ele.parentNode.parentNode.rows);
-				songChange(ele.innerHTML.split('<span>')[0]);
+				songChange(ele.innerHTML.split('>')[1].split('<')[0]);
+				var song = ele.innerHTML.split('>')[1].split('<')[0];
+				console.log('song '+song);
+				// $('#now_playing_list_body').html('');
+				// var id = "now_playing_item_"+$('#now_playing_list tr').length;
+				// $('<tr><td style="padding-left:10px;opacity:0;transition:all .5s; transform:translateX(100px);" id='+id+'>'+song+'</td></tr>').appendTo('#now_playing_list_body');
+				// setTimeout(function(){
+				// 	$('#'+id).css({'opacity':'1', 'transform':'translateX(0px)'});
+				// },100);
+				// if($('#now_playing_list tr').length == 1){
+				// 	window.nextSong = $(ele).closest('tr').next('tr');
+				// 	window.prevSong = $(ele).closest('tr').prev('tr');
+				// }else{
+				// 	window.nextSong = $('#now_playing_item_2');
+				// }
 			});
 		});
 		function songChange(song){
+			$(this).closest('tr').css({'border':'green'});
 			$.ajax({
 			        type: "POST",
 			        url: "/",
@@ -234,15 +337,28 @@
 			        success: function(data){
 			        	if(data[0].status == 'OK'){
 			        		// console.log(typeof(data[1]));
-			        		 console.log(data[1]);
-			        		$('#title_now_playing').html(data[1].title);
+			        		 currentsong = data[1]
+			        		$('#title_now_playing').html(data[1].title.split('(')[0]);
 			        		$('#album_now_playing').html(data[1].album.split('(')[0].slice(0,28));
-			        		$('#art_now_playing').attr('src',"data:image/jpeg;base64," + data[1].image);
+			        		if(data[1].image == '/images/none.png'){
+			        			$('#art_now_playing').attr('src',data[1].image);
+			        		}else{
+			        			$('#art_now_playing').attr('src',"data:image/jpeg;base64," + data[1].image);
+			        		}
 			        		$('#song_source').attr('src', data[1].path);
+			        		$('#controls_flex_container_bg').css({
+			        			'background': "url(data:image/jpeg;base64," + data[1].image + ")",
+			        			'box-shadow': '0 0 50px rgba(0,0,0,0.7) inset',
+			        			'filter':'blur(50px)',
+			        			'background-size':'contain'
+			        		});
 			        		document.getElementById("audio_player").load();
 			        		setTimeout(function(){
 			        			$('audio')[0].play();
 			        			$('#play').html('pause_circle_outline');
+			        			$('#youtube_player').attr('src','');
+			        			$('#youtube_player').css({'display':'none'});
+			        			$('#youtube_status').html('visibility_off');
 			        		},300);
 			        	}else{
 			        		alert('failed');
@@ -337,23 +453,138 @@
 		function renderSearchResult(data, classtoadd){
 			html = '<ul>';
 			for(var i=0;i<data.length;i++){
-				html += '<li style="font-size:12px;color:white;padding:5px 2px 5px 10px;background:rgba(255,255,255,.06);font-weight:100;" class="'+classtoadd+'"><strong>'+data[i].title+'</strong><br><span style="font-size:10px">'+data[i].artist+'</span><br><span style="font-size:10px">'+data[i].album+'</span></li><br>'
+				html += '<div class="'+classtoadd+'" style="display:flex; flex-direction:row;background:rgba(255,255,255,.06);"><img style="width:60px;height:60px" src="data:image/jpeg;base64,'+data[i].image+'"><div style="display:flex;flex-direction:column;font-size:12px;overflow-x:hidden;color:white;padding:5px 2px 5px 10px;font-weight:100;max-height:60px;overflow-y:hidden"><li style="" class="'+classtoadd+'song"><strong>'+data[i].title+'</strong></li><li style="font-size:10px">'+data[i].artist+'</li></div></div><i class="material-icons small search_to_now_playing" style="font-size:15px">playlist_add</i><br>'
 			}
 			html+='</ul>';
 			$('#search_results').html(html);
 			attachListeners();
+			searchToPlaylistEventListeners();
 		}
 
 		function attachListeners(){
 			[].forEach.call(document.getElementsByClassName('search_result_list'),function(ele){
 				ele.addEventListener('click', function(){
 					ele.style.cursor = 'pointer';
-					console.log(ele.innerHTML.split('>')[1].split('<')[0]);
-					songChange(ele.innerHTML.split('>')[1].split('<')[0]);
+					console.log($(ele).find('li').first('li').text());
+					songChange($(ele).find('li').first('li').text());
 				});
 			});
 		}
+		function resizeFunction(){
+		    	var e =document.getElementById('art_now_playing');
+		    	var h = $('#controls_flex_container').height()-10;
+		    	var w = $(window).width();
+		    	e.style.width = h+'px';
+		    	e.style.height = h+'px';
+		    	e.style.bottom = h*.08 + 'px';
+		    	$('#slider').css({
+		    		'marginBottom':h*.15+'px'
+		    	});
+				var w1 = $('#warning_text').width();
+		        var w2 = $(window).width();
+		        var w3 = $('#warning_icon').width();
+				$('#warning_text').css({'position': 'fixed','top': ($(window).height())/2.5 +'px','left': (w2-w1)/2+'px'});
+				$('#warning_icon').css({'position': 'fixed','top': ($(window).height())/2.1 +'px','left': (w2-w3)/2+'px'});
+				console.log(w*.05);
+				$('#title_now_playing').css({
+					'margin-left':w*.02+'px'
+				});
+				$('#album_now_playing').css({
+					'margin-left':w*.02+'px'
+				});
+		    }
+		function youtubeFeed(songtosearch){
+			var song = songtosearch
+			console.log(song);
+			console.log('current song ' + currentsong );
+			$.ajax({
+				type: "POST",
+				url: '/youtubeFeed',
+				data: JSON.stringify({search_song: song}),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				success: function(data){
+					console.log(data);
+					if(data[0].token == 'missing'){
+						// console.log(typeof(data[1]));
+						console.log('youtube search failed');
+					}else{
+						// var html = new EJS({url: '/table.ejs'}).render(data)
+						// console.log(html);
+						$('#youtube_player').css({'display':'block'});
+						$('#youtube_holder').css({'display': 'block'});
+						var embedlink = 'https://www.youtube.com/embed/'+data[0].token + '?autoplay=0&showinfo=0&autoplay=1&controls=1&version=3&enablejsapi=1';
+						$('#youtube_player').attr('src',embedlink);
+						var player = $('audio')[0];
+						player.pause();
+						$('#youtube_status').html('visibility');
 
+					}
+				},
+				failure: function(errMsg) {
+				    alert(errMsg);
+				}
+
+			});
+		}
+		function addToPlaylistEventListeners(){
+			[].forEach.call(document.getElementsByClassName('add_to_now_playing'),function(ele){
+				ele.addEventListener('click', function(){
+					elej = $(ele);
+					var playlist_entry = elej.closest('tr').text().split('\n')[1].split('\t')[3];
+					var id = "now_playing_item_"+$('#now_playing_list tr').length;
+					$('<tr><td style="padding-left:10px;opacity:0;transition:all .5s; transform:translateX(100px);" id='+id+'>'+playlist_entry+'</td></tr>').appendTo('#now_playing_list_body');
+					
+						setTimeout(function(){
+							$('#'+id).css({'opacity':'1', 'transform':'translateX(0px)'});
+						},100);
+					
+					//console.log($('#now_playing_item_'+$('#now_playing_list tr').length).text());
+					//nextSong($(ele).closest('tr').next('tr'));
+					//previousSong($(ele).closest('tr').prev('tr'))
+					// console.log(ele.parentNode.parentNode.rows);
+					setTimeout(function(){
+						$('#'+id).click(function(e){
+							var next = $(e.target).closest('tr').next('tr');
+							var prev = $(e.target).closest('tr').prev('tr');
+							songChange(playlist_entry);
+							window.nextSong = next;
+							window.prevSong = prev;
+
+						});
+					},500);
+				});
+			});
+		}
+		function searchToPlaylistEventListeners(){
+			[].forEach.call(document.getElementsByClassName('search_to_now_playing'),function(ele){
+				ele.addEventListener('click', function(){
+					elej = $(ele);
+					var playlist_entry = elej.prev('div').closest('div').find('div').find('strong').html();
+					console.log(playlist_entry)
+					var id = "now_playing_item_"+$('#now_playing_list tr').length;
+					$('<tr><td style="padding-left:10px;opacity:0;transition:all .5s; transform:translateX(100px);" id='+id+'>'+playlist_entry+'</td></tr>').appendTo('#now_playing_list_body');
+					
+						setTimeout(function(){
+							$('#'+id).css({'opacity':'1', 'transform':'translateX(0px)'});
+						},100);
+					
+					//console.log($('#now_playing_item_'+$('#now_playing_list tr').length).text());
+					//nextSong($(ele).closest('tr').next('tr'));
+					//previousSong($(ele).closest('tr').prev('tr'))
+					// console.log(ele.parentNode.parentNode.rows);
+					setTimeout(function(){
+						$('#'+id).click(function(e){
+							var next = $(e.target).closest('tr').next('tr');
+							var prev = $(e.target).closest('tr').prev('tr');
+							songChange(playlist_entry);
+							window.nextSong = next;
+							window.prevSong = prev;
+						});
+					},500)
+				});
+			});
+		}
 		// function nextSong(ele){
 		// 	var player = $('audio')[0];
 		// 	var selfClick = false;
@@ -423,6 +654,9 @@
 	    }
 	    .search_result_list:hover{
 	    	cursor: pointer;
+	    }
+	    #youtube_player{
+	    	display: none;
 	    }
 	</style>
 </body>

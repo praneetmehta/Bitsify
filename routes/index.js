@@ -1,16 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const testFolder = "/media/praneet/Trash/Music/";
-const fs = require('graceful-fs');
-const path = require('path');
-var file_list = []
+const testFolder = process.platform == 'win32' ? "D:\\Music\\": "/media/praneet/Trash/Music/";
+const fs = require('graceful-fs');const path = require('path');
+var PythonShell = require('python-shell');
 var i = 0;
 global.song_list = [];
 var counter = 0;
 const mm = require('musicmetadata');
 var EventEmitter = require('events');
-var user = 'praneet';
+console.log(process.platform);var user = process.platform == 'win32' ? 'praneetWin':'praneet';
 EventEmitter.defaultMaxListeners = 9999;
+console.log(path.resolve(testFolder));
+var file_list = []
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -23,7 +24,7 @@ router.get('/', function(req, res) {
     var counter = 0;
     var i = 0;
 
-    fs.readdir(testFolder, (err, files) => {
+    fs.readdir(testFolder, (err, files) => {console.log('reading files');
         if (err) console.log(err);
         else {
             for(var i in files) {
@@ -41,7 +42,6 @@ router.get('/', function(req, res) {
                 counter++;
                 // console.log(counter);
                 if (err) {
-                    console.log(err);
                     readableStream.close();
                 } else {
                     readableStream.close();
@@ -53,7 +53,7 @@ router.get('/', function(req, res) {
                     var image = metadata.picture;
                     // console.log(image[0].data)
                     var base64String = '';
-                    if (image) {
+                    if (image.length!=0) {
                         // for (var i = 0; i < image[0].data.length; i++) {
                         //     base64String += String.fromCharCode(image[0].data[i]);
                         // }
@@ -123,11 +123,9 @@ router.post('/search', function(req, res){
     function search(search_query, search_array, store, callback){
         var doneCount = 0;
         for(var j=0;j<search_array.length;j++){
-            console.log(search_array.length);
             for(var k=0;k<search_query.length;k++){
                 //console.log(search_array[j].title+'-----'+search_query[k])
-                if(search_array[j].title.toLowerCase().includes(search_query[k]) || search_array[j].artist.toLowerCase().includes(search_query[k]) || search_array[j].album.toLowerCase().includes(search_query[k])){
-                    console.log('found');
+                if(search_array[j].title.toLowerCase().includes(search_query[k]) || search_array[j].artist.toLowerCase().includes(search_query[k])  ){
                     store.push(search_array[j]);
                     doneCount++;
                     break;
@@ -136,7 +134,6 @@ router.post('/search', function(req, res){
                 }
             }
         if(j==search_array.length-1){
-            console.log('yippee');
             callback();
         }
         }
@@ -145,8 +142,34 @@ router.post('/search', function(req, res){
     search(search_query, global.song_list, store, renderFunc);
 
     function renderFunc(){
-        console.log(store.length);
         res.send(store).status(200);
     }
-})
+});
+
+router.post('/youtubeFeed', function(req, res){
+    var data = req.body;
+    var song_info = data.search_song;
+    var done = false;
+    var sp = process.platform == 'win32' ? 'D:\\Projects\\Web\\Bitsify\\config\\' : '/media/praneet/Trash/Projects/Web/Bitsify/config/';
+    var options = {
+      mode: 'text',
+      scriptPath: sp,
+      args: [song_info]
+    };
+    var token = '';
+    PythonShell.run('youtubeFeed.py', options, function(err, results){
+            if(err){console.log(err)}
+            else{
+                token = results[1].split('watch?v=')[1];
+                console.log('youtube embed token ' + token);
+                done = true;
+            }
+
+            if(token != '' && done == true){
+                res.send([{token: token}]).status(200);
+            }else if(token == '' && done == true){
+                res.send([{token: 'missing'}]).status(200);
+            }
+    });
+});
 module.exports = router;

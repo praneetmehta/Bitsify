@@ -1,4 +1,15 @@
+#main{
+	display: none;
+}
+#preload{
+	display: none;
+	top: 50%;
+	left: 50%;
+	margin-left: -100px;
+	margin-top: -100px;
+}
 html, body{
+	background: black;
 	width: 100%;
 	height: 100%;
 	font-family: Roboto;
@@ -6,8 +17,15 @@ html, body{
 	overflow-y: hidden;
 	overflow-x: hidden;
 	cursor: default;
+	-webkit-user-select: none;
+	   -moz-user-select: -moz-none;
+	    -ms-user-select: none;
+	        user-select: none;
 }
-
+input,
+textarea {
+     -moz-user-select: text;
+}
 #background{
 	z-index: -1;
 	position: fixed;
@@ -47,7 +65,7 @@ h1,h2,h3,h4,h5,h6{
 	height: 90%;
 	width: 13vmax;
 	background-color: rgba(255,255,255,.05);
-	overflow-y: hidden;
+	overflow-y: scroll;
 	overflow-x: hidden;
 }
 #window::-webkit-scrollbar-track
@@ -85,6 +103,23 @@ h1,h2,h3,h4,h5,h6{
 	border-radius: 0px;
 	background-color: #333;
 }
+#user_flex_container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #000;
+}
+
+#user_flex_container::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#user_flex_container::-webkit-scrollbar-thumb
+{
+	border-radius: 0px;
+	background-color: #333;
+}
 #controls_flex_container{
 	position: fixed;
 	display: flex;
@@ -96,6 +131,14 @@ h1,h2,h3,h4,h5,h6{
 	width: 100%;
 	height: 9%;
 	background-color: rgba(255,255,255,.1);
+}
+#controls_flex_container_bg{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 9%;
+	overflow-y: hidden;
 }
 #song_info{
 	display: flex;
@@ -183,7 +226,7 @@ i{
   clear: both;
   overflow: hidden;
   position: relative;
-  height: 3px;
+  height: 4px;
   width: 45%;
   background: #333;
   border-radius: 3px;
@@ -194,6 +237,7 @@ i{
   width: 0%;
   background: #bbb;
   border-radius: 5px;
+  position: relative;		
   transition: background 0.5s;
 
 }
@@ -203,7 +247,8 @@ i{
 }
 #window{
 	position: fixed;
-	top: 10px;
+	height: 88%;
+	top: 0px;
 	left: 210px;
 	background: rgba(255,255,255,0.05);
 	overflow-y: auto;
@@ -248,6 +293,11 @@ th{
 	padding:0px 2px;
 	width: 70%;
 	margin-top: 10px;
+	transition: all 0.5s;
+}
+#search_song:focus{
+	margin-left: 10%;
+	width: 80%;
 }
 #search_button{
 	color: white;
@@ -255,4 +305,7 @@ th{
 	border-radius: 20px;
 	text-align: center;
 	margin-left: 5em;
+}
+#youtube_holder{
+	display: none;
 }
