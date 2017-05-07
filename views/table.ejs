@@ -1,5 +1,6 @@
 <table id="song_table">
 	<thead >
+			<th style="width:2px;padding:0"></th>
 			<th>Title</th>
 			<th class="albumhere">Album</th>
 			<th>Artist</th>
@@ -7,11 +8,12 @@
 	</thead>
 	<tbody class="song_row">
 		<% for(var i=0;i<list.length;i++){%>
-		<tr id="<%=i%>_row" >
-			<td class="title"><span class="list_span" style="display: inline-block;"><%= list[i].title %><span></td>
-			<td class="albumhere"><%= list[i].album.slice(0,40).split('(')[0] %></td>
-			<td><%= list[i].artist %></td>
-			<td><i class="material-icons small add_to_now_playing" style="font-size:15px">playlist_add</i></td>
+		<tr class="_row" >
+			<td style="width:1px; border-radius:0; padding: 5px 2px 5px 2px" class="indicator"></td>
+			<td class="title"><span class="list_span" style="display: inline-block;padding: 5px 2px 5px 2px"><%= list[i].title %><span></td>
+			<td class="albumhere" style="padding: 10px 2px 0px 2px"><%= list[i].album.slice(0,40).split('(')[0] %></td>
+			<td style="padding: 5px 2px 5px 2px"><%= list[i].artist %></td>
+			<td style="padding: 5px 2px 5px 2px"><i class="material-icons small add_to_now_playing" style="font-size:15px">playlist_add</i></td>
 		</tr>
 		<%}%>
 	</tbody>

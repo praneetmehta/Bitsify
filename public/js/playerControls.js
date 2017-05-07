@@ -40,7 +40,7 @@ $(document).ready(function(){
 		});
 		$('#progress').mouseout(function(e){
 			$('#progress').css({'height':'2px'});
-			$('#progress-bar').css({'background-color':'#bbb'});
+			$('#progress-bar').css({'background-color':'#ddd'});
 		})
 
 		$('#progress').click(function(){ //Use the position to seek when clicked
@@ -79,6 +79,10 @@ $(document).ready(function(){
 		    player.currentTime = seek;
 		});
 
-	})
+	});
+	function sayhello(){
+		console.log('hello');
+	}
 	controllAdjust();
 });
+

@@ -94,6 +94,9 @@ router.post('/', function(req, res){
     var found = false;
     for(var j=0;j<global.song_list.length;j++){
         if(global.song_list[j].title == req.body.song){
+            console.log(global.song_list[j].album);
+            console.log(req.body.album);
+            console.log(global.song_list[j].album == req.body.album);
             index = j;
             found = true;
             store.push(global.song_list[index]);
@@ -172,4 +175,55 @@ router.post('/youtubeFeed', function(req, res){
             }
     });
 });
+
+router.post('/savePlaylist', function(req, res){
+    console.log('recieving data .....');
+    var data = req.body;
+    var playlistData = data.playlistData;
+    var name = data.name;
+    console.log(data);
+    if(fs.existsSync('./public/playlists/'+name+'.txt')){
+        console.log('file exists');
+        respond('try some other file name. file name already exists');
+    }else{
+        fs.writeFile('./public/playlists/'+name+'.txt', playlistData, function(err){
+            if(err){
+                console.log(err);
+                res.send({data:'error'});
+            }
+            else{
+                // console.log('file has been saved');
+                respond('saved');
+            }
+        });
+    }
+    function respond(stat){
+        res.send({status:stat}).status(200);
+    }
+});
+
+router.post('/loadPlaylist', function(req, res){
+    console.log('reciecing data ....');
+    var data = req.body;
+    var name = data.name;
+    if(fs.existsSync('./public/playlists/'+name+'.txt')){
+        // console.log('playlist exists');
+        fs.readFile('./public/playlists/'+name+'.txt', 'utf8', function(err, data) {
+          if (err){
+            console.log(err);
+            respond('some error in loading the playlist',' ');
+          }else{
+            // console.log(data);
+            respond('loaded', data);
+          }
+        });
+        
+    }else{
+        console.log('playlist not found');
+        respond('playlist not found',' ');
+    }
+    function respond(stat, playlistData){
+        res.send({status:stat, data:playlistData}).status(200);
+    }
+})
 module.exports = router;

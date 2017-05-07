@@ -9,7 +9,7 @@
 	margin-top: -100px;
 }
 html, body{
-	background: black;
+	background:#000;
 	width: 100%;
 	height: 100%;
 	font-family: Roboto;
@@ -138,7 +138,7 @@ h1,h2,h3,h4,h5,h6{
 	bottom: 0;
 	width: 100%;
 	height: 9%;
-	overflow-y: hidden;
+	transition: background .6s;
 }
 #song_info{
 	display: flex;
@@ -148,6 +148,9 @@ h1,h2,h3,h4,h5,h6{
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
+}
+tbody{
+	border-top-color: #4f4f4f;
 }
 #controls{
 	display: flex;
@@ -165,6 +168,7 @@ h1,h2,h3,h4,h5,h6{
 	height: 50px;
 	margin:5px 12px 5px 8px;
 }
+
 #art_now_playing{
 	width: 50px;
 	height: 50px;
@@ -226,16 +230,16 @@ i{
   clear: both;
   overflow: hidden;
   position: relative;
-  height: 4px;
+  height: 2px;
   width: 45%;
-  background: #333;
+  background: #888;
   border-radius: 3px;
   transition: all 0.5s;
 }
 #progress #progress-bar {
   height: 100%;
   width: 0%;
-  background: #bbb;
+  background: #ddd;
   border-radius: 5px;
   position: relative;		
   transition: background 0.5s;
@@ -248,6 +252,7 @@ i{
 #window{
 	position: fixed;
 	height: 88%;
+	width: 60%;
 	top: 0px;
 	left: 210px;
 	background: rgba(255,255,255,0.05);
@@ -261,9 +266,6 @@ tr,td{
 	padding: 5px;
 	transition: all 0.3s;
 }
-tr:hover{
-	background-color: rgba(255,255,255,0.1)
-}
 
 .title:hover{
 	cursor: pointer;
@@ -273,25 +275,24 @@ tr:hover{
 	text-decoration: underline;
 }
 th{
-	padding-top: 5px;
-	padding-bottom: 9px; 
+	padding-top: 6px;
+	padding-bottom: 7px; 
 	font-weight: 300;
+	font-size: .8em;
+	color: #7f7f7f;
 }
 .albumhere{
    	display:block;
 }
 
 #search_song{
-	margin-left: 15%;
+	margin-left: 20%;
 	text-align: center;	
 	font-size: .8em;
-	background-color: #222;
 	color: white;
 	height: 3em;
-	border: 1px solid white;
-	border-radius: 20px;
 	padding:0px 2px;
-	width: 70%;
+	width: 60%;
 	margin-top: 10px;
 	transition: all 0.5s;
 }
@@ -299,13 +300,53 @@ th{
 	margin-left: 10%;
 	width: 80%;
 }
-#search_button{
-	color: white;
-	border: 1px solid white;
-	border-radius: 20px;
-	text-align: center;
-	margin-left: 5em;
-}
+
 #youtube_holder{
 	display: none;
+}
+::selection{
+	color: black;
+	background: white;
+}
+tr{
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #181818;
+}
+#youtube_search{
+	padding: 4px 7px;
+	text-align: center;	
+	background: transparent;
+	font-size: .8em;
+	color: white;
+	margin-left: 20%;
+	height: 3em;
+	padding:0px 2px;
+	width: 60%;
+	margin-top: 10px;
+	transition: all 0.5s;
+	border-width: 0px 0px 1px 0px
+}
+#youtube_search:focus{
+	margin-left: 10%;
+	width: 80%;
+}
+/*.black{
+	border-width: 2px;
+	border-style: solid;
+	border-color: gray;
+	transition: border-radius 0.6s;
+	border-radius: 10%;
+}
+.black:hover{
+	border-radius: 50%;
+}*/
+.hover{
+	background-color: #222;
+}
+.hover2{
+	background-color: #222;
+}
+._row:hover{
+	background-color: #222;
 }
