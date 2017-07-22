@@ -1,6 +1,9 @@
 #main{
 	display: none;
 }
+#preloader_img{
+	transition: all 1.5s;
+}
 #preload{
 	display: none;
 	top: 50%;
@@ -9,7 +12,7 @@
 	margin-top: -100px;
 }
 html, body{
-	background:#000;
+	background: black;
 	width: 100%;
 	height: 100%;
 	font-family: Roboto;
@@ -130,6 +133,7 @@ h1,h2,h3,h4,h5,h6{
 	bottom: 0;
 	width: 100%;
 	height: 9%;
+	overflow-y: hidden;
 	background-color: rgba(255,255,255,.1);
 }
 #controls_flex_container_bg{
@@ -137,8 +141,9 @@ h1,h2,h3,h4,h5,h6{
 	left: 0;
 	bottom: 0;
 	width: 100%;
-	height: 9%;
+	height: 4.5%;
 	transition: background .6s;
+	overflow-y: hidden;
 }
 #song_info{
 	display: flex;
@@ -180,13 +185,13 @@ tbody{
 
 #title_now_playing{
 	padding: 3px 3px 1px 3px;
-	font-size: 11px;
+	font-size: .6em;
 	font-weight: 300;
 	transition: all 0.7s;
 }
 #album_now_playing{
 	padding: 1px 2px 2px 2px;
-	font-size: 10px;
+	font-size: .5em;
 	transition: all 0.7s;
 }
 
@@ -197,7 +202,7 @@ tbody{
 	flex-wrap: nowrap;
 	justify-content: center;
 	align-items: center;
-	margin-top: 10px;
+	margin-top: 15px;
 	margin-bottom: 0px
 }
 #slider{
@@ -207,8 +212,8 @@ tbody{
 	flex-wrap: nowrap;
 	justify-content: center;
 	align-items: center;
-	margin-bottom: 2px;
-	margin-top: -1px;
+	margin-bottom: 5px;
+	margin-top: -.1em;
 }
 audio{
 	display: none;
@@ -218,7 +223,8 @@ audio{
 	padding: 0px 10px;
 }
 #play{
-	font-size: 30px;
+	font-size: 1.6em;
+	font-weight: 100;
 }
 i{
 	cursor: pointer;
@@ -232,7 +238,7 @@ i{
   position: relative;
   height: 2px;
   width: 45%;
-  background: #888;
+  background: #444;
   border-radius: 3px;
   transition: all 0.5s;
 }

@@ -9,12 +9,14 @@ $(document).ready(function(){
 		var scrub = 0;
 		var current_play = 0;
 		$('#play').click(function(){
-			if($(this).html() == 'play_circle_outline'){
+			if($(this).hasClass('flaticon-play-button')){
 				player.play();
-				$(this).html('pause_circle_outline');
-			}else if($(this).html() == 'pause_circle_outline'){
+				$(this).removeClass('flaticon-play-button');
+				$(this).addClass('flaticon-pause');
+			}else if($(this).hasClass('flaticon-pause')){
 				player.pause();
-				$(this).html('play_circle_outline');
+				$(this).removeClass('flaticon-pause');
+				$(this).addClass('flaticon-play-button');
 			}
 		});
 	
@@ -26,11 +28,9 @@ $(document).ready(function(){
 		});
 		
 		//Event listener when the track finishes  
-		$(player).on('ended', function(){ 
-			$("#play")
-		      .html('play_circle_outline')   
+		$(player).on('ended', function(){   
 		    $('#progress-bar').css('width', '0');
-
+		    $('#next').click();
 		});
 		//Get position of mouse for scrubbing
 		$('#progress').mousemove(function(e){ 

@@ -5,23 +5,24 @@
 	<link rel="icon" href="/images/bitsify.png" sizes="16x16">
 	<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="/js/materialize.min.js"></script>
-	<script type="text/javascript" src="/js/main.js"></script>
 	<link rel="stylesheet" type="text/css" href="/css/materialize.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link href="/css/fonts.css" type="text/css" rel="stylesheet">
-	<link href = "/css/jquery-ui.css"
-	   rel = "stylesheet">
-	   <script src = "/js/jquery-ui.js"></script>
-	   <script type="text/javascript" src="/js/touchPunch.min.js"></script>
+	<link href = "/css/jquery-ui.css" rel = "stylesheet">
+	<link href = "/Web Font/style.css" rel="stylesheet">
+	<link href = "/font/flaticon.css" rel="stylesheet">
+    <script src = "/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/js/touchPunch.min.js"></script>
+
 
 </head>
 <body>
 	<div id="preload" style="position: fixed;">
-		<img src="/images/bitsify.png" style="width: 200px;height: 200px">
+		<img id="preloader_img" src="/images/bitsify.png" style="width: 200px;height: 200px">
 		<h2 style="text-align: center">Bitsify</h2>
 	</div>
 	<div id="main">
-		<div id="controls_flex_container_bg">
+		<div id="controls_flex_container_bg" style="overflow-y: hidden !important;">
 			
 		</div>
 		<div id="modal1" class="modal">
@@ -31,9 +32,9 @@
 		    <p><strong>Search : </strong>To search just enter a keyword (from title or artist name) and search results will appear automatically</p><br>
 		    <p><strong>Buttons : </strong></p>
 		    <ul>
-		    	<li><i class="small material-icons" style="font-size:22px;margin-top: 20px">launch</i> opens the youtube video for the currently playing song in a floating player(iframe). This player is not draggable by default</li>
-		    	<li><i class="small material-icons" style="font-size:22px;margin-top: 20px">visibility_off</i> can be used to hide/show the youtube popup player</li>
-		    	<li><i class="small material-icons" style="font-size:22px;margin-top: 20px">lock_outline</i> is used to toggle the draggable functionality of the player. Once enabled and youtube controls will not work. They will work on disabling it again.</li>
+		    	<li><i class="small material-icons" style="font-size:1.2em;margin-top: 20px">launch</i> opens the youtube video for the currently playing song in a floating player(iframe). This player is not draggable by default</li>
+		    	<li><i class="small material-icons" style="font-size:1.2em;margin-top: 20px">visibility_off</i> can be used to hide/show the youtube popup player</li>
+		    	<li><i class="small material-icons" style="font-size:1.2em;margin-top: 20px">lock_outline</i> is used to toggle the draggable functionality of the player. Once enabled and youtube controls will not work. They will work on disabling it again.</li>
 		    </ul><br>
 		    <p>You can add songs to your now playing list from the music list or from search list, but to play from the now playing playlist you need to play any one song from that list (prefferably the top one because that's where you want your playlist to start from). You can not remove individual songs from the playlist right now :( By the way the playlist is sortable.</p>
 		  </div>
@@ -94,11 +95,11 @@
 						<audio preload="none" id="audio_player">
 							<source id="song_source" src="<%= list[0].path%>">
 						</audio>
-						<i class="small material-icons" id="replay" style="font-size: 22px;">replay_30</i>
-						<i class="small material-icons" id="previous" style="font-size: 22px;">skip_previous</i>
-						<i class="small material-icons" id="play">play_circle_outline</i>
-						<i class="small material-icons" id="next" style="font-size: 22px;">skip_next</i>
-						<i class="small material-icons" id="forward" style="font-size: 22px;">forward_30</i>
+						<i class="lnr lnr-undo material-icons" id="replay" style="font-size: 1.2em;"></i>
+						<i class="lnr lnr-chevron-left material-icons" id="previous" style="font-size: 1.2em;"></i>
+						<i class="flaticon-play-button" style="margin-right: 15px" id="play"></i>
+						<i class="lnr lnr-chevron-right material-icons" id="next" style="font-size: 1.2em;"></i>
+						<i class="lnr lnr-redo material-icons" id="forward" style="font-size: 1.2em;"></i>
 					</div>
 					<div id="slider">
 						<h6 id="timeNow"><span>00</span>:<span>00</span></h6>
@@ -109,10 +110,10 @@
 					</div>
 				</div>
 				<div id="other_controls">
-					<i class="small material-icons" id="youtube" style="font-size:22px;margin-top: 20px">launch</i>
-					<i class="small material-icons" id="youtube_status" style="font-size:22px;margin-top: 20px">visibility_off</i>
-					<i class="small material-icons" id="click_status" style="font-size:22px;margin-top: 20px">lock_outline</i>
-					<i class="small material-icons" id="help" style="font-size:22px;margin-top: 20px" onclick="$('#modal1').modal('open')">info</i>
+					<i class="small material-icons" id="youtube" style="font-size:1.2em;margin-top: 20px">launch</i>
+					<i class="small material-icons" id="youtube_status" style="font-size:1.2em;margin-top: 20px">visibility_off</i>
+					<i class="small material-icons" id="click_status" style="font-size:1.2em;margin-top: 20px">lock_outline</i>
+					<i class="small material-icons" id="help" style="font-size:1.2em;margin-top: 20px" onclick="$('#modal1').modal('open')">info</i>
 
 
 
@@ -128,8 +129,8 @@
 				<h6 style="font-weight:600 ;padding-left:5px">Now Playing
 					<span>
 						<i class="material-icons small" id="remove_now_playing" style="font-size: 15px">loop</i><br><br>
-						<button class="waves-effect waves-green btn-flat" style="display: inline-block;width: 40%" id="backup_playlist">Save</button>
-						<button class="waves-effect waves-green btn-flat" style="display: inline-block;width: 40%" id="restore_playlist">Load</button>
+						<button class="waves-effect waves-green btn-flat" style="display: inline-block;width: 40%; font-size:.8em; text-align: center;" id="backup_playlist">Save</button>
+						<button class="waves-effect waves-green btn-flat" style="display: inline-block;width: 40%; font-size:.8em; text-align: center;" id="restore_playlist">Load</button>
 					</span>
 				</h6>
 				
@@ -150,7 +151,8 @@
 	</div>
 	<script src="/js/playerControls.js"></script>
 	<script src="/js/fileReader.js"></script>
-	<script src="/js/id3-minimized.js"></script>
+	<script type="text/javascript" src="/js/main.js"></script>
+	
 <!-- 	<script src="/js/id3extractor.js" ></script>
  -->	<script>
  		$('#art_now_playing').attr('src',"data:image/jpeg;base64,<%= list[0].image%>");

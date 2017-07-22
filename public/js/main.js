@@ -6,11 +6,15 @@
 			'height': height*.929+'px',
 			'left': width*.14 + 'px'
 		});
+		$('#preloader_img').css('transform','rotateZ(380deg)');
 		setTimeout(function(){
-			$('#preload').fadeOut(1500);
-			$('#main').fadeIn(1500);
+			$('#preloader_img').css('transform','rotateZ(360deg)');
+		},2000)
+		setTimeout(function(){
+			$('#preload').fadeOut(2500);
+			$('#main').fadeIn(3000);
 			resizeFunction();	
-		},2000);
+		},3000);
 		$('#now_playing_list_body').sortable();
 		$('#remove_now_playing').click(function(){
 			$('#now_playing_list_body').html('');
@@ -304,18 +308,20 @@
 			        		$('#song_source').attr('src', data[1].path);
 			        		$('#controls_flex_container_bg').css({
 			        			'background': "url(data:image/jpeg;base64," + data[1].image + ")",
-			        			'background-size':'1000% 1000%',
+			        			'backgroundSize':'1000% 1000%',
 			        			'background-position':'bottom',
 			        			'opacity':'0.5',
-			        			'filter':'blur(20px)',
-			        			'overflow-y':'hidden',
+			        			'filter':'blur(40px)',
+			        			'overflow-y':'hidden !important',
 			        			'transition':'all 0.7s'
 			        		});
+			        		
 
 			        		document.getElementById("audio_player").load();
 			        		setTimeout(function(){
 			        			$('audio')[0].play();
-			        			$('#play').html('pause_circle_outline');
+			        			$('#play').removeClass('flaticon-play-button');
+			        			$('#play').addClass('flaticon-pause');
 			        			$('#youtube_player').attr('src','');
 			        			$('#youtube_player').css({'display':'none'});
 			        			$('#youtube_status').html('visibility_off');
@@ -531,11 +537,7 @@
 						setTimeout(function(){
 							$('#'+id).css({'opacity':'1', 'transform':'translateX(0px)'});
 						},100);
-					
-					//console.log($('#now_playing_item_'+$('#now_playing_list tr').length).text());
-					//nextSong($(ele).closest('tr').next('tr'));
-					//previousSong($(ele).closest('tr').prev('tr'))
-					// console.log(ele.parentNode.parentNode.rows);
+
 					setTimeout(function(){
 						$('#'+id).click(function(e){
 							var next = $(e.target).closest('tr').next('tr');
@@ -561,11 +563,7 @@
 						setTimeout(function(){
 							$('#'+id).css({'opacity':'1', 'transform':'translateX(0px)'});
 						},100);
-					
-					//console.log($('#now_playing_item_'+$('#now_playing_list tr').length).text());
-					//nextSong($(ele).closest('tr').next('tr'));
-					//previousSong($(ele).closest('tr').prev('tr'))
-					// console.log(ele.parentNode.parentNode.rows);
+
 					setTimeout(function(){
 						$('#'+id).click(function(e){
 							var next = $(e.target).closest('tr').next('tr');
@@ -578,60 +576,6 @@
 				});
 			});
 		}
-
-		// function nextSong(ele){
-		// 	var player = $('audio')[0];
-		// 	var selfClick = false;
-		// 	$(player).on('ended', function(){ 
-		// 	    player.pause();
-		// 	    var waitTime = 150
-		// 	    player.currentTime = 0;
-		// 	    var nextSongtoPlay = ele.find('td').first().find('span');
-		// 	    setTimeout(function () {      
-		// 	      // Resume play if the element if is paused
-		// 	        if(!selfClick){
-		// 	        	console.log('clicked');
-		// 	        	nextSongtoPlay.click();
-		// 	        }
-			      
-		// 	    }, waitTime);
-			    
-		// 	});
-		// 	// $('#next').click(function(){
-		// 	// 	selfClick = true;
-		// 	// 	player.pause();
-		// 	// 	var waitTime = 150
-		// 	// 	player.currentTime = 0;
-		// 	// 	var nextSongtoPlay = ele.find('td').first().find('span');
-		// 	// 	setTimeout(function () {      
-		// 	// 	  // Resume play if the element if is paused
-		// 	// 	    nextSongtoPlay.click();
-		// 	// 	    console.log('ck');
-				  
-		// 	// 	}, waitTime);
-				
-		// 	// });
-
-		// }
-		// function previousSong(ele){
-		// 	var player = $('audio')[0]
-
-		// 	$('#previous').click(function(){
-		// 		player.pause();
-		// 		var waitTime = 150
-		// 		player.currentTime = 0;
-		// 		var preSongToPlay = ele.find('td').first().find('span');
-		// 		setTimeout(function () {      
-		// 		  // Resume play if the element if is paused
-		// 			if(preSongToPlay){
-		// 				preSongToPlay.click();
-		// 			}else{
-		// 				console.log('last song');
-		// 			}				  
-		// 		}, waitTime);
-				
-		// 	});
-		// }
 	});
 
 
