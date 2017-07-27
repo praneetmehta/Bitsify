@@ -12,7 +12,7 @@ Can serve files in your music directory anywhere on your pc, over lan!!
 2) run `npm install` to install the project dependencies,  and finally
 3) create a folder named symlink in the public directory.
 
-#### Now open routes/index.js and on line 3 modify testFolder variable to your music directory's absoulte path. That's it.
+#### Now open config/symlinkcreator.js and on line 8/9 modify linuxPath/windowsPath variable as per your operating system to your music directory's absoulte path. That's it.
 #### all done!!
 
 run node app in the root directory of the app and open localhost:3000  (3000 is the default port used, you may change it if you want)on your browser.

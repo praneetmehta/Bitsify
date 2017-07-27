@@ -5,8 +5,9 @@ const mm = require('musicmetadata');
 
 console.log(process.platform);
 var user = process.platform == 'win32' ? 'praneetWin':'praneet';
-
-const testFolder = process.platform == 'win32' ? "D:\\Music\\": "/media/praneet/Trash/Music/";
+const windowsPath = "D:\\Music\\"
+const linuxPath = "/media/praneet/Trash/Music/"
+const testFolder = process.platform == 'win32' ? windowsPath: linuxPath ;
 global.song_list = [];
 
 function readorcreateSymlink(){
