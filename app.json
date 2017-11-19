@@ -1,0 +1,6 @@
+{
+    "name":"Bitsify",
+    "description":"NodeJS Music Streaming SaaS",
+    "repository":"https://github.com/praneetmehta/Bitsify",
+    "Keywords":["node", "express", "static"]
+}
